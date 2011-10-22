@@ -1,5 +1,7 @@
 package arno
 
+import grails.util.Environment
+
 class HomeController {
 
 	def facebookService
@@ -16,7 +18,7 @@ class HomeController {
 	}
 	
 	def homeNotLogin = {
-		
+		[produ:Environment.getCurrentEnvironment()==Environment.PRODUCTION]	
 	}
 				
     def login = {
@@ -81,7 +83,14 @@ class HomeController {
 		if (Environment.getCurrentEnvironment()==Environment.PRODUCTION){
 			user = session.user
 		} else {
-			user = User.getAt(1)
+			user = User.get(1)
+			if (!user){
+				user = new User()
+				user.name  ='Prueba'
+				user.email ='prueba@hotmail.com'
+				user.facebookId = '13113414'
+				user.save(flush:true)
+			}
 		}
 		return user
 	}		
